@@ -8,8 +8,6 @@ public class PlayerMovement : MonoBehaviour
     Vector3 movement;
     Animator anim;
     Rigidbody playerRigidbody;
-    int floorMask;
-    float camRayLenght = 100f;
 
     public float rotationSpeed = 8f;
     public float joystickDeadzone = 0.2f;
@@ -17,12 +15,8 @@ public class PlayerMovement : MonoBehaviour
     float xAxis;
     float yAxis;
 
-
-
-
     void Awake ()
     {
-        floorMask = LayerMask.GetMask("Floor");
         anim = GetComponent <Animator> ();
         playerRigidbody = GetComponent<Rigidbody> ();
     }
@@ -32,8 +26,6 @@ public class PlayerMovement : MonoBehaviour
         float h = Input.GetAxisRaw("LeftJoyHorizontal" + playerNumber);
         float v = Input.GetAxisRaw("LeftJoyVertical"+ playerNumber);
 
-        Vector3 direction = new Vector3(Input.GetAxis("RightJoyHorizontal1") * speed *
-            Time.deltaTime, Input.GetAxis("RightJoyVertical1") * speed * Time.deltaTime, 0.0f);
         Move(h, v);
         Turning();
         Animating(h, v);
@@ -66,11 +58,11 @@ public class PlayerMovement : MonoBehaviour
         */
         
 
-        if (Mathf.Abs(Input.GetAxis("RightJoyHorizontal1")) >= joystickDeadzone ||
-            Mathf.Abs(Input.GetAxis("RightJoyVertical1")) >= joystickDeadzone)
+        if (Mathf.Abs(Input.GetAxis("RightJoyHorizontal" + playerNumber)) >= joystickDeadzone ||
+            Mathf.Abs(Input.GetAxis("RightJoyVertical" + playerNumber)) >= joystickDeadzone)
         {
-            xAxis = Input.GetAxis("RightJoyHorizontal1");
-            yAxis = Input.GetAxis("RightJoyVertical1");
+            xAxis = Input.GetAxis("RightJoyHorizontal" + playerNumber);
+            yAxis = Input.GetAxis("RightJoyVertical" + playerNumber);
         }
 
         float joystickAngle = Mathf.Atan2(xAxis, yAxis) * Mathf.Rad2Deg;
