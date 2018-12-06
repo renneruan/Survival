@@ -2,10 +2,11 @@
 
 public class GameOverManager : MonoBehaviour
 {
-    public PlayerHealth playerHealth;
-
+    public PlayerHealth player1Health;
+    public PlayerHealth player2Health;
 
     Animator anim;
+    
 
 
     void Awake()
@@ -16,7 +17,7 @@ public class GameOverManager : MonoBehaviour
 
     void Update()
     {
-        if (playerHealth.currentHealth <= 0)
+        if (player1Health.currentHealth <= 0 && player2Health.currentHealth <= 0)
         {
             anim.SetTrigger("GameOver");
         }

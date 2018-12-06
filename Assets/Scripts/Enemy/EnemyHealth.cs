@@ -37,7 +37,7 @@ public class EnemyHealth : MonoBehaviour
     }
 
 
-    public void TakeDamage (int amount, Vector3 hitPoint)
+    public void TakeDamage (int amount, Vector3 hitPoint, int playerNumber)
     {
         if(isDead)
             return;
@@ -52,6 +52,11 @@ public class EnemyHealth : MonoBehaviour
         if(currentHealth <= 0)
         {
             Death ();
+            if(playerNumber == 1)
+            {
+                ScoreManager.score1 += scoreValue;
+            }
+            else { ScoreManager.score2 += scoreValue; }
         }
     }
 
@@ -74,7 +79,6 @@ public class EnemyHealth : MonoBehaviour
         GetComponent <UnityEngine.AI.NavMeshAgent> ().enabled = false;
         GetComponent <Rigidbody> ().isKinematic = true;
         isSinking = true;
-        ScoreManager.score += scoreValue;
         Destroy (gameObject, 2f);
     }
 }

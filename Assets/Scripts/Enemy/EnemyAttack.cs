@@ -6,19 +6,21 @@ public class EnemyAttack : MonoBehaviour
     public float timeBetweenAttacks = 0.5f;
     public int attackDamage = 10;
 
-
     Animator anim;
-    GameObject player;
-    PlayerHealth playerHealth;
+    GameObject player1, player2;
+    PlayerHealth player1Health, player2Health;
     EnemyHealth enemyHealth;
-    bool playerInRange;
+    int playerInRange = 0;
     float timer;
 
 
     void Awake ()
     {
-        player = GameObject.FindGameObjectWithTag ("Player");
-        playerHealth = player.GetComponent <PlayerHealth> ();
+        player1 = GameObject.FindGameObjectWithTag("Player1");
+        player1Health = player1.GetComponent<PlayerHealth>();
+        player2 = GameObject.FindGameObjectWithTag("Player2");
+        player2Health = player2.GetComponent<PlayerHealth>();
+
         enemyHealth = GetComponent<EnemyHealth>();
         anim = GetComponent <Animator> ();
     }
@@ -26,18 +28,21 @@ public class EnemyAttack : MonoBehaviour
 
     void OnTriggerEnter (Collider other)
     {
-        if(other.gameObject == player)
+        if(other.gameObject == player1)
         {
-            playerInRange = true;
+            playerInRange = 1;
+        }else if(other.gameObject == player2)
+        {
+            playerInRange = 2;
         }
     }
 
 
     void OnTriggerExit (Collider other)
     {
-        if(other.gameObject == player)
+        if(other.gameObject == player1 || other.gameObject == player2)
         {
-            playerInRange = false;
+            playerInRange = 0;
         }
     }
 
@@ -46,25 +51,34 @@ public class EnemyAttack : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if(timer >= timeBetweenAttacks && playerInRange && enemyHealth.currentHealth > 0)
+        if(timer >= timeBetweenAttacks && (playerInRange != 0) && enemyHealth.currentHealth > 0)
         {
-            Attack ();
+            Attack (playerInRange);
         }
 
-        if(playerHealth.currentHealth <= 0)
+        if(player1Health.currentHealth <= 0 && player2Health.currentHealth <= 0)
         {
             anim.SetTrigger ("PlayerDead");
         }
     }
 
 
-    void Attack ()
+    void Attack (int playerNumber)
     {
         timer = 0f;
 
-        if(playerHealth.currentHealth > 0)
+        if (playerNumber == 1)
         {
-            playerHealth.TakeDamage (attackDamage);
+            if (player1Health.currentHealth > 0)
+            {
+                player1Health.TakeDamage(attackDamage);
+            }
+        } else if (playerNumber == 2)
+        {
+            if (player2Health.currentHealth > 0)
+            {
+                player2Health.TakeDamage(attackDamage);
+            }
         }
     }
 }

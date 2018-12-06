@@ -4,10 +4,12 @@ public class PlayerMovement : MonoBehaviour
 {
     public float speed = 6f;
     public int playerNumber;
+    public GameObject anotherPlayer;
 
     Vector3 movement;
     Animator anim;
     Rigidbody playerRigidbody;
+    PlayerHealth anotherPlayerHealth;
 
     public float rotationSpeed = 8f;
     public float joystickDeadzone = 0.2f;
@@ -19,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     {
         anim = GetComponent <Animator> ();
         playerRigidbody = GetComponent<Rigidbody> ();
+        anotherPlayerHealth = anotherPlayer.GetComponent<PlayerHealth>();
     }
 
     void FixedUpdate()
@@ -33,31 +36,30 @@ public class PlayerMovement : MonoBehaviour
 
     void Move(float h, float v)
     {
+        float difHorizontal;
+        float difVertical;
+
         movement.Set(h, 0f, v);
 
         movement = movement.normalized * speed * Time.deltaTime;
+
+        difHorizontal = Mathf.Abs((this.transform.position.x + movement.x) -
+            anotherPlayer.transform.position.x);
+        difVertical = Mathf.Abs((this.transform.position.z + movement.z) -
+            anotherPlayer.transform.position.z);
+
+        if (anotherPlayerHealth.currentHealth > 0) {
+            if (difHorizontal > 20)
+                movement.x = 0;
+            if ( difVertical > 14)
+                movement.z = 0;
+        }
 
         playerRigidbody.MovePosition(transform.position + movement);
     }
 
     void Turning()
     {
-        /*
-        Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit floorHit;
-
-        if (Physics.Raycast(camRay, out floorHit, camRayLenght, floorMask))
-        {
-            Vector3 playerToMouse = floorHit.point - transform.position;
-            playerToMouse.y = 0f;
-
-            Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
-            playerRigidbody.MoveRotation(newRotation);
-        }
-        */
-        
-
         if (Mathf.Abs(Input.GetAxis("RightJoyHorizontal" + playerNumber)) >= joystickDeadzone ||
             Mathf.Abs(Input.GetAxis("RightJoyVertical" + playerNumber)) >= joystickDeadzone)
         {
