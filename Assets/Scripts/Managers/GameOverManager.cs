@@ -19,6 +19,7 @@ public class GameOverManager : MonoBehaviour
     {
         if (player1Health.currentHealth <= 0 && player2Health.currentHealth <= 0)
         {
+            LogManager.gameOver = true;
             anim.SetTrigger("GameOver");
         }
     }

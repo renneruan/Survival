@@ -6,6 +6,8 @@ public class PlayerMovement : MonoBehaviour
     public int playerNumber;
     public GameObject anotherPlayer;
 
+    PlayerShooting shooting;
+
     Vector3 movement;
     Animator anim;
     Rigidbody playerRigidbody;
@@ -17,11 +19,16 @@ public class PlayerMovement : MonoBehaviour
     float xAxis;
     float yAxis;
 
+    float timeRemaining;
+    float timeToLog = 0.5f;
+
     void Awake ()
     {
+        timeRemaining = timeToLog;
         anim = GetComponent <Animator> ();
         playerRigidbody = GetComponent<Rigidbody> ();
         anotherPlayerHealth = anotherPlayer.GetComponent<PlayerHealth>();
+        shooting = GetComponentInChildren<PlayerShooting>();
     }
 
     void FixedUpdate()
@@ -32,6 +39,15 @@ public class PlayerMovement : MonoBehaviour
         Move(h, v);
         Turning();
         Animating(h, v);
+
+        timeRemaining -= Time.deltaTime;
+        if (timeRemaining <= 0)
+        {
+            float distance = Vector3.Distance(this.transform.position, anotherPlayer.transform.position);
+            LogManager.AddPlayerMovementLog(playerNumber, this.transform);
+            LogManager.AddPlayerDistanceLog(playerNumber, distance);
+            timeRemaining = timeToLog;
+        }
     }
 
     void Move(float h, float v)
@@ -78,5 +94,27 @@ public class PlayerMovement : MonoBehaviour
     {
         bool walking = h != 0f || v != 0f;
         anim.SetBool("IsWalking", walking);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        //Debug.Log(other.gameObject.tag);
+        if (other.gameObject.tag == "PowerUp" && !shooting.PowerIsActive()
+            )
+        {
+            Destroy(other.gameObject);
+            shooting.SetPowerUp(other.gameObject.GetComponent<PowerUpScript>().getPowerType());
+        }else if(other.gameObject.tag == "Enemy")
+        {
+            //LogManager.enemiesAroundPerSecond[playerNumber-1]++;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Enemy")
+        {
+            //LogManager.enemiesAroundPerSecond[playerNumber-1]--;
+        }
     }
 }

@@ -7,6 +7,7 @@ public class EnemyHealth : MonoBehaviour
     public float sinkSpeed = 2.5f;
     public int scoreValue = 10;
     public AudioClip deathClip;
+    public int type;
 
 
     Animator anim;
@@ -56,7 +57,13 @@ public class EnemyHealth : MonoBehaviour
             {
                 ScoreManager.score1 += scoreValue;
             }
-            else { ScoreManager.score2 += scoreValue; }
+            else
+            {
+                ScoreManager.score2 += scoreValue;
+            }
+            Debug.Log("morreu" + " " + scoreValue);
+            LogManager.AddPlayerScoreMade(playerNumber, scoreValue);
+            LogManager.playerScoreMadePerSecond[playerNumber-1] += scoreValue;
         }
     }
 

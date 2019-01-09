@@ -53,6 +53,7 @@ public class PlayerHealth : MonoBehaviour
         damaged = true;
 
         currentHealth -= amount;
+        LogManager.playerDamageTakenPerSecond[playerShooting.playerNumber -1] += amount;
 
         healthSlider.value = currentHealth;
 

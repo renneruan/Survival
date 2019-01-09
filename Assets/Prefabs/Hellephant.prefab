@@ -30,7 +30,7 @@ GameObject:
   - component: {fileID: 195499824804440336}
   m_Layer: 9
   m_Name: Hellephant
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -295,6 +295,7 @@ MonoBehaviour:
   sinkSpeed: 2.5
   scoreValue: 30
   deathClip: {fileID: 8300000, guid: 8c615fd0429f34edf85539d70279360d, type: 3}
+  type: 2
 --- !u!114 &114912109470181912
 MonoBehaviour:
   m_ObjectHideFlags: 1
